@@ -1,0 +1,45 @@
+#include <stdio.h>
+#include <string.h>
+void encrypt(char *plaintext, char *key) {
+    int keyLength = strlen(key);
+    int textLength = strlen(plaintext);
+    int rows = (textLength + keyLength - 1) / keyLength;
+    char matrix[rows][keyLength];
+    int index = 0;
+    for (int col = 0; col < keyLength; col++) {
+        for (int row = 0; row < rows; row++) {
+            if (index < textLength) {
+                matrix[row][col] = plaintext[index++];
+            } else {
+                matrix[row][col] = ' ';
+            }
+        }
+    }
+    printf("Encrypted Matrix:\n");
+    for (int row = 0; row < rows; row++) {
+        for (int col = 0; col < keyLength; col++) {
+            printf("%c ", matrix[row][col]);
+        }
+        printf("\n");
+    }
+    for (int col = 0; col < keyLength; col++) {
+        int keyIndex = key[col] - '1';
+        for (int row = 0; row < rows; row++) {
+            printf("%c", matrix[row][keyIndex]);
+        }
+    }
+    printf("\n");
+}
+
+int main() {
+    char plaintext[100], key[100];
+    printf("Enter plaintext: ");
+    gets(plaintext);
+
+    printf("Enter key: ");
+    gets(key);
+    printf("\nEncryption:\n");
+    encrypt(plaintext, key);
+
+    return 0;
+}
