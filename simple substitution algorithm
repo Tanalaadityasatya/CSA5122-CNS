@@ -1,0 +1,48 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+
+#define ALPHABET_LENGTH 26
+
+char* decrypt_simple_substitution(const char* ciphertext, const char* substitution_key);
+
+int main() {
+    char ciphertext[1000];
+    char substitution_key[ALPHABET_LENGTH];
+
+    printf("Enter ciphertext: ");
+    fgets(ciphertext, sizeof(ciphertext), stdin);
+    printf("Enter substitution key (26 alphabets in order): ");
+    fgets(substitution_key, sizeof(substitution_key), stdin);
+
+    // Remove newline characters
+    ciphertext[strcspn(ciphertext, "\n")] = '\0';
+    substitution_key[strcspn(substitution_key, "\n")] = '\0';
+
+    char* plaintext = decrypt_simple_substitution(ciphertext, substitution_key);
+
+    printf("Decrypted text: %s\n", plaintext);
+
+    free(plaintext);
+
+    return 0;
+}
+
+char* decrypt_simple_substitution(const char* ciphertext, const char* substitution_key) {
+    int ciphertext_length = strlen(ciphertext);
+    char* plaintext = (char*)malloc(ciphertext_length + 1);
+
+    for (int i = 0; i < ciphertext_length; i++) {
+        if (isalpha(ciphertext[i])) {
+            char offset = islower(ciphertext[i]) ? 'a' : 'A';
+            int index = ciphertext[i] - offset;
+            plaintext[i] = substitution_key[index];
+        } else {
+            plaintext[i] = ciphertext[i];
+        }
+    }
+    plaintext[ciphertext_length] = '\0';
+
+    return plaintext;
+}
